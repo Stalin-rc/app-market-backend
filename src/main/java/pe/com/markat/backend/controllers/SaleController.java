@@ -25,8 +25,10 @@ public class SaleController {
         List<Sale> sales=repo.findAll();
         for (Sale sale:sales){
             sale.setSaleDetails(null);
-            sale.getStore().setSales(null);
-            sale.getStore().setStocks(null);
+           if(sale.getStore()!=null){
+               sale.getStore().setSales(null);
+               sale.getStore().setStocks(null);
+           }
             sale.getClient().setSales(null);
         }
         return sales;

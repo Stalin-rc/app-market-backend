@@ -46,11 +46,13 @@ public class SaleDatailsController {
     }
 
     @PostMapping("/details")
-    public SaleDetails addSaleDetails(@RequestBody SaleDetails saleDetails){
-        SaleDetails saleDetail1=repo.save(saleDetails);
-        saleDetail1.setSale(null);
-        saleDetail1.setProduct(null);
-        return saleDetail1;
+    public ResponseEntity<List<SaleDetails>> addSaleDetails(@RequestBody List<SaleDetails> saleDetails){
+        List<SaleDetails> saleDetail1=repo.saveAll(saleDetails);
+        for (SaleDetails sale:saleDetail1){
+            sale.setSale(null);
+            sale.setProduct(null);
+        }
+        return new ResponseEntity<>(saleDetail1,HttpStatus.OK);
     }
 
     @PutMapping("/details")
