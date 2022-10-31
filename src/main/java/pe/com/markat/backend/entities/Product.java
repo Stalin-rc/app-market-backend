@@ -15,7 +15,7 @@ public class Product {
     private String productName;
     private String brand;
     private String productDescription;
-    private String type;
+    private String type_name;
     private String img;
     @ManyToOne
     @JoinColumn(name = "supplier_id")
