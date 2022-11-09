@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface StockRepository extends JpaRepository<Stock, Long> {
     @Query("select s from Stock s where s.store.id=?1 order by s.noUnits desc")
-    List<Stock> findAllByStoreIdJPA(Long id);
+    List<Stock> findAllStocksByStoreIdJPA(Long id);
 }

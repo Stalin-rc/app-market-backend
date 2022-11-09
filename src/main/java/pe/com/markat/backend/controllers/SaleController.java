@@ -20,9 +20,12 @@ import java.util.Optional;
 public class SaleController {
     @Autowired
     private SaleRepository repo;
-    @GetMapping("/sales")
-    public List<Sale> getSales(){
-        List<Sale> sales=repo.findAll();
+    @GetMapping("/user/{idStore}/sales")
+
+    public ResponseEntity<List<Sale>> getSales(@PathVariable Long idStore){
+
+        List<Sale> sales=repo.findAllSalesByStoreIdJPA(idStore);
+
         for (Sale sale:sales){
             sale.setSaleDetails(null);
            if(sale.getStore()!=null){
@@ -31,7 +34,7 @@ public class SaleController {
            }
             sale.getClient().setSales(null);
         }
-        return sales;
+        return new ResponseEntity<List<Sale>>(sales,HttpStatus.OK);
     }
     @GetMapping("/sales/{id}")
     public ResponseEntity<Optional<Sale>>  getSale(@PathVariable Long id){

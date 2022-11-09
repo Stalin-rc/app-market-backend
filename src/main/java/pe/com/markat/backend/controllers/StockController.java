@@ -17,11 +17,12 @@ import java.util.Optional;
 public class StockController {
     @Autowired
     private StockRepository repo;
-    @GetMapping("/stocks/list/{idStore}")
+    @GetMapping("/user/{idStore}/stocks")
 
     public ResponseEntity<List<Stock>> getStocks(@PathVariable Long idStore){
 
-        List<Stock> stocks=repo.findAllByStoreIdJPA(idStore);
+        List<Stock> stocks=repo.findAllStocksByStoreIdJPA(idStore);
+
         if (stocks.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

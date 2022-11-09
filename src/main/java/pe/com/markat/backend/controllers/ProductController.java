@@ -21,10 +21,11 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductRepository repo;
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
+    @GetMapping("/user/{idStore}/products")
 
-        List<Product> products=repo.findAll();
+    public ResponseEntity<List<Product>> getProducts(@PathVariable Long idStore){
+
+        List<Product> products=repo.findAllProductsByStoreIdJPA(idStore);
 
         if (products.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

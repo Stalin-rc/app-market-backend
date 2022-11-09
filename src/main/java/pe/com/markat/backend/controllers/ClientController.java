@@ -16,13 +16,14 @@ import java.util.List;
 public class ClientController {
     @Autowired
     private ClientRepository repo;
-    @GetMapping("/clients")
-    public ResponseEntity<List<Client>> getClients(){
-        List<Client> clients=repo.findAll();
+    @GetMapping("/user/{idStore}/clients")
+    public ResponseEntity<List<Client>> getClients(@PathVariable Long idStore){
+        List<Client> clients=repo.findAllClientsByStoreIdJPA(idStore);
 
         if (clients.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+
 
         for(Client client:clients){
             client.setSales(null);
