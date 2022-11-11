@@ -21,6 +21,23 @@ import java.util.Optional;
 public class ProductController {
     @Autowired
     private ProductRepository repo;
+
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(){
+
+        List<Product> products=repo.findAll();
+
+        if (products.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        for (Product product:products){
+            product.setSaleDetails(null);
+            product.getSupplier().setProducts(null);
+            product.setStocks(null);
+        }
+        return new ResponseEntity<List<Product>>(products,HttpStatus.OK);
+    }
+
     @GetMapping("/user/{idStore}/products")
 
     public ResponseEntity<List<Product>> getProducts(@PathVariable Long idStore){

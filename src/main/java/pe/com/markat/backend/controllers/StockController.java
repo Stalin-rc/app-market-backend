@@ -17,7 +17,7 @@ import java.util.Optional;
 public class StockController {
     @Autowired
     private StockRepository repo;
-    @GetMapping("/user/{idStore}/stocks")
+    @GetMapping("/stocks/list/{idStore}")
 
     public ResponseEntity<List<Stock>> getStocks(@PathVariable Long idStore){
 
@@ -43,9 +43,11 @@ public class StockController {
         stock.get().getProduct().getSupplier().setProducts(null);
         stock.get().getProduct().setStocks(null);
         stock.get().getProduct().setSaleDetails(null);
-        stock.get().setStore(null);
+        stock.get().getStore().setStocks(null);
+        stock.get().getStore().setSales(null);
         return new ResponseEntity<Optional<Stock>>(stock,HttpStatus.OK);
     }
+
     @PostMapping("/stocks")
     public ResponseEntity<Stock> addStock(@RequestBody Stock stock){
         Stock stock1=repo.save(stock);

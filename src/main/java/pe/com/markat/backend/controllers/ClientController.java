@@ -31,6 +31,14 @@ public class ClientController {
 
         return new ResponseEntity<List<Client>>(clients, HttpStatus.OK);
     }
+
+    @GetMapping("/clients/credits")
+
+    public ResponseEntity <Double> GetTotalCredits(){
+        Double credits = repo.findSumCreditClientsByStoreIdJPA();
+        return new ResponseEntity<Double>(credits,HttpStatus.OK);
+    }
+
     @GetMapping("/clients/{id}")
     public Client getClient(@PathVariable Long id){
         Client client=repo.findById(id).orElseThrow(()->new ResourceNotFoundException("Not found Client with id="+id));
