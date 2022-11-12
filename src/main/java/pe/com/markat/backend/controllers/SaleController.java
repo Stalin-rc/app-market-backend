@@ -20,8 +20,30 @@ import java.util.Optional;
 public class SaleController {
     @Autowired
     private SaleRepository repo;
-    @GetMapping("/user/{idStore}/sales")
 
+    @GetMapping("/top3/sales/{idStore}")
+    public ResponseEntity<List<Sale>> getTop3SaleIdSQL(@PathVariable Long idStore){
+
+        List<Sale> sales=repo.findTop3SaleIdSQL(idStore);
+
+        for (Sale sale:sales){
+            sale.setSaleDetails(null);
+            if(sale.getStore()!=null){
+                sale.getStore().setSales(null);
+                sale.getStore().setStocks(null);
+            }
+            sale.getClient().setSales(null);
+        }
+        return new ResponseEntity<List<Sale>>(sales,HttpStatus.OK);
+    }
+
+    @GetMapping("/sales/total/{idStore}")
+    public ResponseEntity <Double> GetTotalPrice(@PathVariable Long idStore){
+        Double totalPrice = repo.findSumTotalPriceByStoreIdJPA(idStore);
+        return new ResponseEntity<Double>(totalPrice,HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{idStore}/sales")
     public ResponseEntity<List<Sale>> getSales(@PathVariable Long idStore){
 
         List<Sale> sales=repo.findAllSalesByStoreIdJPA(idStore);
@@ -48,7 +70,7 @@ public class SaleController {
     @PostMapping("/sales")
     public ResponseEntity<Sale> addSale(@RequestBody Sale sale){
         Sale sale1=repo.save(sale);
-        sale1.setClient(null);
+        sale1.getClient().setSales(null);
         sale1.setStore(null);
         sale1.setSaleDetails(null);
         return new ResponseEntity<Sale>(sale1,HttpStatus.CREATED);

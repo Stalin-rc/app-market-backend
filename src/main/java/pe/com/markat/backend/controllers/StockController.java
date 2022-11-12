@@ -17,6 +17,33 @@ import java.util.Optional;
 public class StockController {
     @Autowired
     private StockRepository repo;
+
+    @GetMapping("/stock/total/{idStore}")
+    public ResponseEntity <Double> getStockTotal(@PathVariable Long idStore){
+        Double totalStock = repo.findSumStockByStoreIdJPA(idStore);
+        return new ResponseEntity<Double>(totalStock,HttpStatus.OK);
+    }
+
+
+    @GetMapping("/top3/stocks/{idStore}")
+
+    public ResponseEntity<List<Stock>> getStocksByStoreIdJPA(@PathVariable Long idStore){
+
+        List<Stock> stocks=repo.findStocksByStoreIdJPA(idStore);
+
+        if (stocks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        for (Stock stock:stocks){
+            stock.setStore(null);
+            stock.getProduct().setStocks(null);
+            stock.getProduct().setSaleDetails(null);
+            stock.getProduct().getSupplier().setProducts(null);
+        }
+        return new ResponseEntity<List<Stock>>(stocks,HttpStatus.OK);
+    }
+
+
     @GetMapping("/stocks/list/{idStore}")
 
     public ResponseEntity<List<Stock>> getStocks(@PathVariable Long idStore){

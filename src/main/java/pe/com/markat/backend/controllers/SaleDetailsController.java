@@ -17,6 +17,18 @@ import java.util.Optional;
 public class SaleDetailsController {
     @Autowired
     private SaleDetailsRepository repo;
+    @GetMapping("/sales/{idStore}/saledetails")
+    public ResponseEntity<List<SaleDetails>> getSales(@PathVariable Long idStore){
+
+        List<SaleDetails> salesDetails=repo.findAllSalesDetailsBySaleIdJPA(idStore);
+        for (SaleDetails sale:salesDetails){
+            sale.setSale(null);
+            sale.setProduct(null);
+        }
+        return new ResponseEntity<List<SaleDetails>>(salesDetails,HttpStatus.OK);
+    }
+
+
     @GetMapping("/details")
     public ResponseEntity<List<SaleDetails>> getSaleDetails(){
 
