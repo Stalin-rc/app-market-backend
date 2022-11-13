@@ -14,7 +14,7 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query("SELECT SUM(c.totalPrice) FROM Sale c WHERE c.store.id=?1")
     Double findSumTotalPriceByStoreIdJPA(Long id);
 
-   @Query("SELECT s FROM Sale s WHERE s.store.id =? 1 ORDER BY s.dateSale desc")
+   @Query("SELECT s FROM Sale s WHERE s.store.id =? 1 ORDER BY s.dateSale asc")
    List<Sale> findTop3SaleIdSQL(Long id);
 
 }
