@@ -18,6 +18,21 @@ public class SaleController {
     @Autowired
     private SaleRepository repo;
 
+     @GetMapping("/top3/sales/{idStore}")
+    public ResponseEntity<List<Sale>> getTop3SaleIdSQL(@PathVariable Long idStore){
+
+        List<Sale> sales=repo.findTop3SaleIdSQL(idStore);
+
+        for (Sale sale:sales){
+            sale.setSaleDetails(null);
+            if(sale.getStore()!=null){
+                sale.getStore().setSales(null);
+                sale.getStore().setStocks(null);
+            }
+            sale.getClient().setSales(null);
+        }
+        return new ResponseEntity<List<Sale>>(sales,HttpStatus.OK);
+    }
    
     @GetMapping("/sales/total/{idStore}")
     public ResponseEntity <Double> GetTotalPrice(@PathVariable Long idStore){
