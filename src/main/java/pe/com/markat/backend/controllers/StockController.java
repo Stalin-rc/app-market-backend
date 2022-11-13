@@ -78,8 +78,12 @@ public class StockController {
     @PostMapping("/stocks")
     public ResponseEntity<Stock> addStock(@RequestBody Stock stock){
         Stock stock1=repo.save(stock);
-            stock1.setProduct(null);
-            stock1.setStore(null);
+            stock1.getProduct().setSaleDetails(null);
+            stock1.getProduct().setSupplier(null);
+            stock1.getProduct().setStocks(null);
+            stock1.getStore().setStocks(null);
+            stock1.getStore().setSales(null);
+
         return new ResponseEntity<Stock>(stock1,HttpStatus.CREATED);
     }
     @PutMapping("/stocks")
