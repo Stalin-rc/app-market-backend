@@ -48,9 +48,11 @@ public class ClientController {
     public Client editClient(@RequestBody Client client){
         return repo.save(client);
     }
+
     @DeleteMapping("/clients/{id}")
     public ResponseEntity<HttpStatus> deleteClient(@PathVariable Long id){
         repo.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 }
