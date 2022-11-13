@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pe.com.markat.backend.entities.Contact;
-import pe.com.markat.backend.entities.Product;
-import pe.com.markat.backend.entities.Sale;
-import pe.com.markat.backend.entities.Store;
+import pe.com.markat.backend.entities.*;
 import pe.com.markat.backend.exceptions.ResourceNotFoundException;
 import pe.com.markat.backend.repositories.SaleRepository;
 
@@ -21,22 +18,7 @@ public class SaleController {
     @Autowired
     private SaleRepository repo;
 
-    @GetMapping("/top3/sales/{idStore}")
-    public ResponseEntity<List<Sale>> getTop3SaleIdSQL(@PathVariable Long idStore){
-
-        List<Sale> sales=repo.findTop3SaleIdSQL(idStore);
-
-        for (Sale sale:sales){
-            sale.setSaleDetails(null);
-            if(sale.getStore()!=null){
-                sale.getStore().setSales(null);
-                sale.getStore().setStocks(null);
-            }
-            sale.getClient().setSales(null);
-        }
-        return new ResponseEntity<List<Sale>>(sales,HttpStatus.OK);
-    }
-
+   
     @GetMapping("/sales/total/{idStore}")
     public ResponseEntity <Double> GetTotalPrice(@PathVariable Long idStore){
         Double totalPrice = repo.findSumTotalPriceByStoreIdJPA(idStore);
@@ -61,10 +43,19 @@ public class SaleController {
     @GetMapping("/sales/{id}")
     public ResponseEntity<Optional<Sale>>  getSale(@PathVariable Long id){
         Optional<Sale> sale= Optional.ofNullable(repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("No se encontró la venta con id: " + id)));
-        sale.get().setSaleDetails(null);
+
         sale.get().getStore().setSales(null);
         sale.get().getStore().setStocks(null);
         sale.get().getClient().setSales(null);
+        for (SaleDetails saleDetails:sale.get().getSaleDetails()){
+            saleDetails.getProduct().setSupplier(null);
+            saleDetails.getProduct().setSaleDetails(null);
+            saleDetails.getProduct().setStocks(null);
+            saleDetails.setSale(null);
+        }
+
+        sale.get().getClient().setSales(null);
+
         return new ResponseEntity<Optional<Sale>>(sale,HttpStatus.OK);
     }
     @PostMapping("/sales")
