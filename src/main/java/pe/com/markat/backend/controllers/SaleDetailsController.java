@@ -17,13 +17,18 @@ import java.util.Optional;
 public class SaleDetailsController {
     @Autowired
     private SaleDetailsRepository repo;
-    @GetMapping("/sales/{idStore}/saledetails")
-    public ResponseEntity<List<SaleDetails>> getSales(@PathVariable Long idStore){
+    @GetMapping("/sales/{idVenta}/saledetails")
+    public ResponseEntity<List<SaleDetails>> getSales(@PathVariable Long idVenta){
 
-        List<SaleDetails> salesDetails=repo.findAllSalesDetailsBySaleIdJPA(idStore);
+        List<SaleDetails> salesDetails=repo.findAllSalesDetailsBySaleIdJPA(idVenta);
         for (SaleDetails sale:salesDetails){
-            sale.setSale(null);
-            sale.setProduct(null);
+            sale.getSale().getClient().setSales(null);
+            sale.getSale().getStore().setSales(null);
+            sale.getSale().getStore().setStocks(null);
+            sale.getSale().setSaleDetails(null);
+            sale.getProduct().setStocks(null);
+            sale.getProduct().setSaleDetails(null);
+            sale.getProduct().setSupplier(null);
         }
         return new ResponseEntity<List<SaleDetails>>(salesDetails,HttpStatus.OK);
     }
@@ -46,7 +51,7 @@ public class SaleDetailsController {
     }
 
     @GetMapping("/details/{id}")
-    public ResponseEntity<Optional<SaleDetails>> getSaleDetails(@PathVariable Long id){
+    public ResponseEntity<Optional<SaleDetails>> getSaleDetailsById(@PathVariable Long id){
 
         Optional <SaleDetails> saleDetail= Optional.ofNullable(repo.findById(id).
                 orElseThrow(() -> new ResourceNotFoundException("Not found SaleDetails with id: " + id)));;
