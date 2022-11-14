@@ -98,4 +98,18 @@ public class StockController {
         repo.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+    
+    @GetMapping("/stocks/export/excel/{id}")
+    public void exportToExcel(HttpServletResponse response,@PathVariable Long id) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=stock_report";
+        response.setHeader(headerKey, headerValue);
+
+        List<Stock> stocks;
+        stocks = repo.findAllStocksByStoreIdJPA(id);
+        StockExporterExcel exporterExcel = new StockExporterExcel(stocks);
+        exporterExcel.export(response,id);
+    }
+    
 }
